@@ -1,8 +1,8 @@
-ARG PHP_VERSION=8.0
+ARG PHP_VERSION=8.1
 
 # php
 FROM php:${PHP_VERSION}-fpm-alpine
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 COPY docker/php/php.ini $PHP_INI_DIR/conf.d/
 
 RUN apk add --no-cache \
@@ -52,14 +52,14 @@ RUN set -eux; \
 	\
 	apk del .build-deps
 
-RUN set -eux; \
-	composer global require "symfony/flex" --prefer-dist --no-progress --no-suggest --classmap-authoritative; \
-	composer clear-cache
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
 WORKDIR /root
-RUN curl https://get.symfony.com/cli/installer | bash \
-	&& mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+RUN curl -L https://github.com/symfony-cli/symfony-cli/releases/download/v5.3.4/symfony-cli_5.3.4_x86_64.apk -o symfony.apk \
+    && apk add --allow-untrusted symfony.apk \
+    && rm symfony.apk
 
 WORKDIR /var/www/html
 
