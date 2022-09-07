@@ -1,4 +1,4 @@
-ARG PHP_VERSION=8.1
+ARG PHP_VERSION=8.0
 
 # php
 FROM php:${PHP_VERSION}-fpm-alpine
@@ -57,7 +57,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
 WORKDIR /root
-RUN curl -L https://github.com/symfony-cli/symfony-cli/releases/download/v5.3.4/symfony-cli_5.3.4_x86_64.apk -o symfony.apk \
+RUN curl -L https://github.com/symfony-cli/symfony-cli/releases/download/v5.4.13/symfony-cli_5.4.13_x86_64.apk -o symfony.apk \
     && apk add --allow-untrusted symfony.apk \
     && rm symfony.apk
 
